@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Local Weather</title>
+	<link rel="stylesheet" type="text/css" href="./lib/node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="./styles/main.css">
+</head>
+<body>
+
+
+
+<div class="form-group col-xs-6 col-xs-offset-3">
+  <div class="input-group">
+    <span class="input-group-addon" ><span class="glyphicon glyphicon-globe"></span></span>
+    <input type="text" class="form-control" aria-describedby="start-date" id="searchBar" placeholder="Please enter your zip code">
+  </div>
+  <div>
+  	<button type="button" class="btn btn-default">Get Weather</button>
+  </div>
+</div>
+
+<div id="weatherDom" class="container"></div>
+
+
+
+	<script type="text/javascript" src="./lib/node_modules/jquery/dist/jquery.js"></script>
+	<script type="text/javascript" src="./lib/node_modules/bootstrap/dist/js/bootstrap.js"></script>
+	<script type="text/javascript" src="./dist/app.js"></script>
+
+</body>
+</html>
