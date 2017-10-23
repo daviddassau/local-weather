@@ -3,10 +3,8 @@
 let weatherKey;
 const dom = require("./dom");
 
-const searchOwm = (query) => {
+const searchWeatherAPI = (query) => {
 	return new Promise((resolve, reject) => {
-		// console.log("my key made it to searchOwm", weatherKey);
-		// console.log("my query made it to searchOwm", query);
 		$.ajax(`http://api.openweathermap.org/data/2.5/forecast?zip=${query},us&appid=${weatherKey}&units=imperial&cnt=7`).done((data) => {
 			resolve(data);
 		}).fail((error) => {
@@ -16,7 +14,7 @@ const searchOwm = (query) => {
 };
 
 const searchWeather = (query) => {
-	searchOwm(query).then((data) => {
+	searchWeatherAPI(query).then((data) => {
 			showResults(data);
 	}).catch((error) => {
 		console.log("error in search weather", error);
