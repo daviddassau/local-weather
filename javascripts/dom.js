@@ -1,18 +1,10 @@
 "use strict";
 
-// print only the current weather at first
-	// when it prints ...
-	// ... show an option to show 3, 5, & 7 day forcast
-	// when clicked: reprint using their button choice as: i<chosenLength
-
 let chosenLength = 1;
 let weatherArray;
 
 
 const runDomString = () => {
-	console.log("weatherArray", weatherArray);
-	console.log("how many days of data will show up", chosenLength);
-
 	clearDom();
 	domString(weatherArray, chosenLength);
 };
@@ -21,16 +13,17 @@ const domString = (weatherArray, days) => {
 	let domStrang = "";
 
 		domStrang +=	`<div class="container-fluid">`;
+		domStrang +=		`<h3 class="text-center" id="cityName">For Zipcode: "${$('#search-input').val()}"</h3>`;
+
 	for (let i=0; i<chosenLength; i++) {
 		if (i % 3 === 0) {
 			domStrang +=	`<div class="row">`;
 		}
-		// domStrang +=		`<div class="row">`;
+
 		domStrang +=			`<div class="col-sm-4">`;
 		domStrang +=				`<div class="thumbnail text-center">`;
 		domStrang +=					`<div class="info">`;
 		domStrang +=						`<h3>${weatherArray.city.name}</h3>`;
-		//domStrang +=						`<p>Date: ${new Date(weatherArray.list[i].dt_txt).toLocaleDateString()}</p>`;
 		domStrang +=						`<p>Temperature: ${weatherArray.list[i].main.temp}&deg F</p>`;
 		domStrang +=						`<p>Conditions: ${weatherArray.list[i].weather[0].description}</p>`;
 		domStrang +=						`<p>Air pressure: ${weatherArray.list[i].main.pressure} hpa</p>`;
@@ -48,23 +41,32 @@ const domString = (weatherArray, days) => {
 	printToDom(domStrang);
 };
 
-const printToDom = (strang) => {
+const printForecastButtons = () => {
 
-	$("#output").append(strang);
+	let timeStamp = new Date().toLocaleTimeString();
+
 	$("#days").html (
-		`<div class="container"
-		  <div class="row">
-		 	 <div class=" col-xs-12">
-    		 <div class="well">
-					<div class="btn-group col-xs-offset-3" role="group" id="days">
-						<button type="button" class="btn btn-default" name="one day" id="one-day">Today's forecast</button>
-						<button type="button" class="btn btn-default" id="three-day">3 day forecast</button>
-						<button type="button" class="btn btn-default" id="seven-day">7 day forecast</button>
-		 			</div>
-		 		</div>
-		 	</div>
-		 </div>`
-		);
+	`<div class="container">
+	  <div class="row">
+	 	 <div class=" col-xs-12">
+  		 <div class="well">
+				<div class="btn-group col-xs-offset-3" role="group" id="days">
+					<button type="button" class="btn btn-default" name="one day" id="one-day">Today's forecast</button>
+					<button type="button" class="btn btn-default" id="three-day">3 day forecast</button>
+					<button type="button" class="btn btn-default" id="five-day">5 day forecast</button>
+					<p class="text-center">Last Updated: ${timeStamp}</p>
+	 			</div>
+	 		</div>
+	 	</div>
+	 </div>`
+	);
+};
+
+
+
+const printToDom = (strang) => {
+	$("#output").append(strang);
+	printForecastButtons();
 };
 
 
@@ -83,5 +85,21 @@ const clearDom = () => {
 	$("#output").empty();
 };
 
+const printError = () => {
+	clearDom();
+	let userError = "";
+		userError += `<div class="row">`;
+		userError += `<div class="alert alert-danger text-center col-xs-6 col-xs-offset-3" role="alert">I only accept valid 5 digit US zip codes</div>`;
+		userError += `</div>`;
+	$("#output").append(userError);
+};
 
-module.exports = {setWeatherArray, clearDom, showChosenNumberOfDays};
+
+
+
+module.exports = {setWeatherArray, clearDom, showChosenNumberOfDays, printError};
+
+
+
+
+

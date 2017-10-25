@@ -25,19 +25,11 @@ module.exports = {retrieveKeys};
 },{"./weather":5}],2:[function(require,module,exports){
 "use strict";
 
-// print only the current weather at first
-	// when it prints ...
-	// ... show an option to show 3, 5, & 7 day forcast
-	// when clicked: reprint using their button choice as: i<chosenLength
-
 let chosenLength = 1;
 let weatherArray;
 
 
 const runDomString = () => {
-	console.log("weatherArray", weatherArray);
-	console.log("how many days of data will show up", chosenLength);
-
 	clearDom();
 	domString(weatherArray, chosenLength);
 };
@@ -46,16 +38,17 @@ const domString = (weatherArray, days) => {
 	let domStrang = "";
 
 		domStrang +=	`<div class="container-fluid">`;
+		domStrang +=		`<h3 class="text-center" id="cityName">For Zipcode: "${$('#search-input').val()}"</h3>`;
+
 	for (let i=0; i<chosenLength; i++) {
 		if (i % 3 === 0) {
 			domStrang +=	`<div class="row">`;
 		}
-		// domStrang +=		`<div class="row">`;
+
 		domStrang +=			`<div class="col-sm-4">`;
 		domStrang +=				`<div class="thumbnail text-center">`;
 		domStrang +=					`<div class="info">`;
 		domStrang +=						`<h3>${weatherArray.city.name}</h3>`;
-		//domStrang +=						`<p>Date: ${new Date(weatherArray.list[i].dt_txt).toLocaleDateString()}</p>`;
 		domStrang +=						`<p>Temperature: ${weatherArray.list[i].main.temp}&deg F</p>`;
 		domStrang +=						`<p>Conditions: ${weatherArray.list[i].weather[0].description}</p>`;
 		domStrang +=						`<p>Air pressure: ${weatherArray.list[i].main.pressure} hpa</p>`;
@@ -73,23 +66,32 @@ const domString = (weatherArray, days) => {
 	printToDom(domStrang);
 };
 
-const printToDom = (strang) => {
+const printForecastButtons = () => {
 
-	$("#output").append(strang);
+	let timeStamp = new Date().toLocaleTimeString();
+
 	$("#days").html (
-		`<div class="container"
-		  <div class="row">
-		 	 <div class=" col-xs-12">
-    		 <div class="well">
-					<div class="btn-group col-xs-offset-3" role="group" id="days">
-						<button type="button" class="btn btn-default" name="one day" id="one-day">Today's forecast</button>
-						<button type="button" class="btn btn-default" id="three-day">3 day forecast</button>
-						<button type="button" class="btn btn-default" id="seven-day">7 day forecast</button>
-		 			</div>
-		 		</div>
-		 	</div>
-		 </div>`
-		);
+	`<div class="container">
+	  <div class="row">
+	 	 <div class=" col-xs-12">
+  		 <div class="well">
+				<div class="btn-group col-xs-offset-3" role="group" id="days">
+					<button type="button" class="btn btn-default" name="one day" id="one-day">Today's forecast</button>
+					<button type="button" class="btn btn-default" id="three-day">3 day forecast</button>
+					<button type="button" class="btn btn-default" id="five-day">5 day forecast</button>
+					<p class="text-center">Last Updated: ${timeStamp}</p>
+	 			</div>
+	 		</div>
+	 	</div>
+	 </div>`
+	);
+};
+
+
+
+const printToDom = (strang) => {
+	$("#output").append(strang);
+	printForecastButtons();
 };
 
 
@@ -108,15 +110,31 @@ const clearDom = () => {
 	$("#output").empty();
 };
 
+const printError = () => {
+	clearDom();
+	let userError = "";
+		userError += `<div class="row">`;
+		userError += `<div class="alert alert-danger text-center col-xs-6 col-xs-offset-3" role="alert">I only accept valid 5 digit US zip codes</div>`;
+		userError += `</div>`;
+	$("#output").append(userError);
+};
 
-module.exports = {setWeatherArray, clearDom, showChosenNumberOfDays};
+
+
+
+module.exports = {setWeatherArray, clearDom, showChosenNumberOfDays, printError};
+
+
+
+
+
+
 },{}],3:[function(require,module,exports){
 "use strict";
 
 const weather = require("./weather");
 const dom = require("./dom");
 
-// const fiveDigitRegex=/^[0-9]+$/;
 const usZipCodeRegex =/(^\d{5}$)|(^\d{5}-\d{4}$)/;
 
 const pressEnter = () => {
@@ -134,18 +152,15 @@ const pressSearch = () => {
 };
 
 
-
-// This function might need clean up aka try not to use such nasty dom traversal
 const daysChosen = () => {
 	$(document).click((e) => {
 		// only run when the buttons are clicked
 		if (e.target.parentNode.id === "days") {
-		// if (e.target.parentNode.id === "days") {
 			console.log("here!");
 			let currentChoiceFromDom = e.target.id;
 
 			// using the id name set the corresponding number of days to show up
-			let currentChoiceNumber = (currentChoiceFromDom === "one-day" ? 1 : currentChoiceFromDom === "three-day" ? 3 : 7);
+			let currentChoiceNumber = (currentChoiceFromDom === "one-day" ? 1 : currentChoiceFromDom === "three-day" ? 3 : 5);
 			
 			// And re-run the dom function showing the correct number of days chosen, using the same zip search.
 			dom.showChosenNumberOfDays(currentChoiceNumber);
@@ -156,20 +171,18 @@ const daysChosen = () => {
 const searchZipcode = () => {
 	let searchInput = $("#search-input").val();
 
-	if (searchInput.length === 5 && searchInput.match(usZipCodeRegex)) {
-		console.log("you entered a zipcode!");
+	if (searchInput.match(usZipCodeRegex)) {
 		weather.searchWeather(searchInput);
 		daysChosen();
 
-	}
-			// else {
-			// 	// dom.printError(notAZip);
-			// }
+	} else {
+			dom.printError();
+		}
 };
 
 
 
-module.exports = {pressEnter, daysChosen, pressSearch};
+module.exports = {pressEnter, pressSearch, daysChosen};
 },{"./dom":2,"./weather":5}],4:[function(require,module,exports){
 "use strict";
 
@@ -188,81 +201,43 @@ const dom = require("./dom");
 
 const searchWeatherAPI = (query) => {
 	return new Promise((resolve, reject) => {
-		$.ajax(`http://api.openweathermap.org/data/2.5/weather?zip=${query}&appid=${weatherKey}&units=imperial`).done((data) => {
+		$.ajax(`http://api.openweathermap.org/data/2.5/forecast?zip=${query},us&appid=${weatherKey}&units=imperial&cnt=7`).done((data) => {
 			resolve(data);
 		}).fail((error) => {
 			reject(error);
 		});
 	});
 };
-
-// const weatherAPISearch = (query) => {
-//     return new Promise((resolve, reject) => {
-//         $.ajax(`http://api.openweathermap.org/data/2.5/weather?zip=${query}&appid=${weatherKey}&units=imperial`).done((data) => {
-//             resolve(data);
-//         }).fail((error) => {
-//             reject(error);
-//         });
-//     });
-// };
 
 const searchWeather = (query) => {
 	searchWeatherAPI(query).then((data) => {
 			showResults(data);
 	}).catch((error) => {
 		console.log("error in search weather", error);
+		dom.printError();
 	});
 };
-
-const forecastAPISearch = (query) => {
-	return new Promise((resolve, reject) => {
-		$.ajax(`http://api.openweathermap.org/data/2.5/forecast/daily?zip=${query}&appid=${weatherKey}&units=imperial`).done((data) => {
-			resolve(data);
-		}).fail((error) => {
-			reject(error);
-		});
-	});
-};
-
-// const searchForecast = (query) => {
-// 	forecastAPISearch(query).then((results) => {
-// 		dom.???(results);
-// 	}).catch((error) => {
-// 		console.log("Error in searchForecast", error);
-// 	})
-// };
-
-// const searchForecast = (query) => {
-//     forecastAPISearch(query).then((results) => {
-//         dom.threeDayWeather(results);
-//     }).catch((error) => {
-//         console.log("There was an error", error);
-//     });
-// };
-
-// His Code
-// const forecastAPISearch = (query) => {
-//     return new Promise((resolve, reject) => {
-//         $.ajax(`http://api.openweathermap.org/data/2.5/forecast/daily?zip=${query}&appid=${weatherKey}&units=imperial`).done((data) => {
-//             resolve(data);
-//         }).fail((error) => {
-//             reject(error);
-//         });
-//     });
-// };
-// end His Code
 
 const setKeys = (apiKey) => {
 	weatherKey = apiKey;
 };
 
 const showResults = (weatherArray) => {
+
+	let fiveDayForecast = [];
+
+	for (let i=0; i<weatherArray.list.length; i++) {
+		if (i === 0 ||i ===  8 || i === 16 ||i ===  32 ||i === 39) {
+			fiveDayForecast.push(weatherArray.list[i]);
+		}
+	}
 	dom.clearDom();
 
-	// just get all 7 days, store em in setWeatherArray, only show what the user asks for
+	// just get all 5 days in 3h format, store em in search-input, only show what the user asks for
+	// every 8th object is pushed to a new array to be used
 	// That way I can minimize the calls I make to the API
 
-	dom.setWeatherArray(weatherArray);
+	dom.setWeatherArray(fiveDayForecast);
 };
 
 module.exports = {setKeys, searchWeather};
