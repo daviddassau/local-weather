@@ -3,10 +3,8 @@
 let weatherKey;
 const dom = require("./dom");
 
-const searchOwm = (query) => {
+const searchWeatherAPI = (query) => {
 	return new Promise((resolve, reject) => {
-		// console.log("my key made it to searchOwm", weatherKey);
-		// console.log("my query made it to searchOwm", query);
 		$.ajax(`http://api.openweathermap.org/data/2.5/forecast?zip=${query},us&appid=${weatherKey}&units=imperial&cnt=7`).done((data) => {
 			resolve(data);
 		}).fail((error) => {
@@ -16,10 +14,11 @@ const searchOwm = (query) => {
 };
 
 const searchWeather = (query) => {
-	searchOwm(query).then((data) => {
+	searchWeatherAPI(query).then((data) => {
 			showResults(data);
 	}).catch((error) => {
 		console.log("error in search weather", error);
+		dom.printError();
 	});
 };
 
@@ -28,12 +27,21 @@ const setKeys = (apiKey) => {
 };
 
 const showResults = (weatherArray) => {
+
+	let fiveDayForecast = [];
+
+	for (let i=0; i<weatherArray.list.length; i++) {
+		if (i === 0 ||i ===  8 || i === 16 ||i ===  32 ||i === 39) {
+			fiveDayForecast.push(weatherArray.list[i]);
+		}
+	}
 	dom.clearDom();
 
-	// just get all 7 days, store em in setWeatherArray, only show what the user asks for
+	// just get all 5 days in 3h format, store em in search-input, only show what the user asks for
+	// every 8th object is pushed to a new array to be used
 	// That way I can minimize the calls I make to the API
 
-	dom.setWeatherArray(weatherArray);
+	dom.setWeatherArray(fiveDayForecast);
 };
 
 module.exports = {setKeys, searchWeather};
