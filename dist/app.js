@@ -50,7 +50,8 @@ const domString = (weatherArray, days) => {
 		domStrang +=			`<div class="col-sm-4">`;
 		domStrang +=				`<div class="thumbnail text-center">`;
 		domStrang +=					`<div class="info">`;
-		// domStrang +=						`<h3>${weatherArray[i].city.name}</h3>`;
+		domStrang +=		                `<h3 class="text-center" id="cityName">For Zipcode: "${$('#search-input').val()}"</h3>`;
+		domStrang +=						`<p>Date: ${new Date(weatherArray[i].dt_txt).toLocaleDateString()}</p>`;
 		domStrang +=						`<p>Temperature: ${weatherArray[i].main.temp}&deg F</p>`;
 		domStrang +=						`<p>Conditions: ${weatherArray[i].weather[0].description}</p>`;
 		domStrang +=						`<p>Air pressure: ${weatherArray[i].main.pressure} hpa</p>`;
@@ -75,9 +76,9 @@ const printForecastButtons = () => {
 	$("#days").html (
 	`<div class="container">
 	  <div class="row">
-	 	 <div class=" col-xs-12">
-  		 <div class="well">
-				<div class="btn-group col-xs-offset-3" role="group" id="days">
+	 	<div class=" col-xs-12">
+  		    <div>
+				<div class="btn-group col-xs-offset-4" role="group" id="days">
 					<button type="button" class="btn btn-default" name="one day" id="one-day">Today's forecast</button>
 					<button type="button" class="btn btn-default" id="three-day">3 day forecast</button>
 					<button type="button" class="btn btn-default" id="five-day">5 day forecast</button>
@@ -174,6 +175,7 @@ const searchZipcode = () => {
 
 	if (searchInput.match(usZipCodeRegex)) {
 		weather.searchWeather(searchInput);
+		// weather.searchForecast(searchInput);
 		daysChosen();
 
 	} else {
@@ -218,6 +220,24 @@ const searchWeather = (query) => {
 		dom.printError();
 	});
 };
+
+// const searchForecastAPI = (query) => {
+// 	return new Promise((resolve, reject) => {
+// 		$.ajax(`http://api.openweathermap.org/data/2.5/weather?zip=${query},us&appid=${weatherKey}&units=imperial`).done((data) => {
+// 			resolve(data);
+// 		}).fail((error) => {
+// 			reject(error);
+// 		});
+// 	});
+// };
+
+// const searchForecast = (query) => {
+// 	searchForecastAPI(query).then((data) => {
+// 		showResults(data);
+// 	}).catch((error) => {
+// 		dom.printError();
+// 	});
+// };
 
 const setKeys = (apiKey) => {
 	weatherKey = apiKey;

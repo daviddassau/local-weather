@@ -22,6 +22,24 @@ const searchWeather = (query) => {
 	});
 };
 
+// const searchForecastAPI = (query) => {
+// 	return new Promise((resolve, reject) => {
+// 		$.ajax(`http://api.openweathermap.org/data/2.5/weather?zip=${query},us&appid=${weatherKey}&units=imperial`).done((data) => {
+// 			resolve(data);
+// 		}).fail((error) => {
+// 			reject(error);
+// 		});
+// 	});
+// };
+
+// const searchForecast = (query) => {
+// 	searchForecastAPI(query).then((data) => {
+// 		showResults(data);
+// 	}).catch((error) => {
+// 		dom.printError();
+// 	});
+// };
+
 const setKeys = (apiKey) => {
 	weatherKey = apiKey;
 };

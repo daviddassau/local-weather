@@ -40,6 +40,7 @@ const searchZipcode = () => {
 
 	if (searchInput.match(usZipCodeRegex)) {
 		weather.searchWeather(searchInput);
+		// weather.searchForecast(searchInput);
 		daysChosen();
 
 	} else {
