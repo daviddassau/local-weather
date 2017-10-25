@@ -36,11 +36,13 @@ const runDomString = () => {
 
 const domString = (weatherArray, days) => {
 	let domStrang = "";
+	console.log(weatherArray);
 
 		domStrang +=	`<div class="container-fluid">`;
-		domStrang +=		`<h3 class="text-center" id="cityName">For Zipcode: "${$('#search-input').val()}"</h3>`;
 
 	for (let i=0; i<chosenLength; i++) {
+		console.log("weatherArray", weatherArray);
+		console.log("days", days);
 		if (i % 3 === 0) {
 			domStrang +=	`<div class="row">`;
 		}
@@ -48,11 +50,11 @@ const domString = (weatherArray, days) => {
 		domStrang +=			`<div class="col-sm-4">`;
 		domStrang +=				`<div class="thumbnail text-center">`;
 		domStrang +=					`<div class="info">`;
-		domStrang +=						`<h3>${weatherArray.city.name}</h3>`;
-		domStrang +=						`<p>Temperature: ${weatherArray.list[i].main.temp}&deg F</p>`;
-		domStrang +=						`<p>Conditions: ${weatherArray.list[i].weather[0].description}</p>`;
-		domStrang +=						`<p>Air pressure: ${weatherArray.list[i].main.pressure} hpa</p>`;
-		domStrang +=						`<p>Wind speed: ${weatherArray.list[i].wind.speed} m/s</p>`;
+		// domStrang +=						`<h3>${weatherArray[i].city.name}</h3>`;
+		domStrang +=						`<p>Temperature: ${weatherArray[i].main.temp}&deg F</p>`;
+		domStrang +=						`<p>Conditions: ${weatherArray[i].weather[0].description}</p>`;
+		domStrang +=						`<p>Air pressure: ${weatherArray[i].main.pressure} hpa</p>`;
+		domStrang +=						`<p>Wind speed: ${weatherArray[i].wind.speed} m/s</p>`;
 		domStrang +=					`</div>`;
 		domStrang +=				`</div>`;
 		domStrang +=			`</div>`;
@@ -114,7 +116,7 @@ const printError = () => {
 	clearDom();
 	let userError = "";
 		userError += `<div class="row">`;
-		userError += `<div class="alert alert-danger text-center col-xs-6 col-xs-offset-3" role="alert">I only accept valid 5 digit US zip codes</div>`;
+		userError += `<div class="alert text-center col-xs-6 col-xs-offset-3" role="alert"><strong>I only accept valid 5 digit US zip codes</strong></div>`;
 		userError += `</div>`;
 	$("#output").append(userError);
 };
@@ -156,7 +158,6 @@ const daysChosen = () => {
 	$(document).click((e) => {
 		// only run when the buttons are clicked
 		if (e.target.parentNode.id === "days") {
-			console.log("here!");
 			let currentChoiceFromDom = e.target.id;
 
 			// using the id name set the corresponding number of days to show up
@@ -176,8 +177,8 @@ const searchZipcode = () => {
 		daysChosen();
 
 	} else {
-			dom.printError();
-		}
+		dom.printError();
+	}
 };
 
 
@@ -201,7 +202,7 @@ const dom = require("./dom");
 
 const searchWeatherAPI = (query) => {
 	return new Promise((resolve, reject) => {
-		$.ajax(`http://api.openweathermap.org/data/2.5/forecast?zip=${query},us&appid=${weatherKey}&units=imperial&cnt=7`).done((data) => {
+		$.ajax(`http://api.openweathermap.org/data/2.5/forecast?zip=${query},us&appid=${weatherKey}&units=imperial`).done((data) => {
 			resolve(data);
 		}).fail((error) => {
 			reject(error);
@@ -211,7 +212,7 @@ const searchWeatherAPI = (query) => {
 
 const searchWeather = (query) => {
 	searchWeatherAPI(query).then((data) => {
-			showResults(data);
+		showResults(data);
 	}).catch((error) => {
 		console.log("error in search weather", error);
 		dom.printError();
@@ -226,8 +227,8 @@ const showResults = (weatherArray) => {
 
 	let fiveDayForecast = [];
 
-	for (let i=0; i<weatherArray.list.length; i++) {
-		if (i === 0 ||i ===  8 || i === 16 ||i ===  32 ||i === 39) {
+	for (let i = 0; i < weatherArray.list.length; i++) {
+		if (i === 0 || i ===  8 || i === 16 || i ===  32 || i === 39) {
 			fiveDayForecast.push(weatherArray.list[i]);
 		}
 	}

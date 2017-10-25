@@ -24,7 +24,6 @@ const daysChosen = () => {
 	$(document).click((e) => {
 		// only run when the buttons are clicked
 		if (e.target.parentNode.id === "days") {
-			console.log("here!");
 			let currentChoiceFromDom = e.target.id;
 
 			// using the id name set the corresponding number of days to show up
@@ -44,8 +43,8 @@ const searchZipcode = () => {
 		daysChosen();
 
 	} else {
-			dom.printError();
-		}
+		dom.printError();
+	}
 };
 
 
