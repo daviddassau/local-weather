@@ -24,7 +24,14 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
         <li><a id="authenticateTab">Authentication</a></li>
-        <li><a id="getWeatherTab">Get Yer Weather</a></li>
+        <li><a id="weatherTab">Get Yer Weather</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Get Social! <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Facebook</a></li>
+            <li><a href="#">Twitter</a></li>
+          </ul>
+        </li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
@@ -39,15 +46,16 @@
 </div>
 
 
-<h1 class="text-center">Get Yer Weather!</h1>
 
-<div class="form-group col-xs-6 col-xs-offset-3">
+
+<div class="form-group has-success col-xs-6 col-xs-offset-3 hide" id="weatherScreen">
+  <h1 class="text-center">Get Yer Weather!</h1>
   <div class="input-group">
     <span class="input-group-addon" ><span class="glyphicon glyphicon-globe"></span></span>
     <input type="text" class="form-control" aria-describedby="start-date" id="search-input" placeholder="Please enter your zip code">
   </div>
   <div>
-  	<button type="button" class="btn btn-default col-xs-12" id="search-btn">Get Weather</button>
+  	<button type="button" class="btn btn-success col-xs-12" id="search-btn">Get Weather</button>
   </div>
 </div>
 
