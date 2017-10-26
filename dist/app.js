@@ -188,9 +188,15 @@ const myLinks = () => {
 		if(event.target.id === "authenticateTab"){
 			$("#authScreen").removeClass("hide");
 			$("#weatherScreen").addClass("hide");
+			$("#mySavedWeatherScreen").addClass("hide");
 		} else if(event.target.id === "weatherTab"){
 			$("#authScreen").addClass("hide");
 			$("#weatherScreen").removeClass("hide");
+			$("#mySavedWeatherScreen").addClass("hide");
+		} else if(event.target.id === "mySavedWeatherTab"){
+			$("#authScreen").addClass("hide");
+			$("#weatherScreen").addClass("hide");
+			$("#mySavedWeatherScreen").removeClass("hide");
 		}
 	});
 };
