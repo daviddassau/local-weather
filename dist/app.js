@@ -50,15 +50,15 @@ const domString = (weatherArray, days) => {
 			domStrang +=	`<div class="row">`;
 		}
 
-		domStrang +=			`<div class="col-sm-4">`;
+		domStrang +=			`<div class="col-sm-4 weather">`;
 		domStrang +=				`<div class="thumbnail text-center">`;
 		domStrang +=					`<div class="info">`;
 		domStrang +=		                `<h3 class="text-center" id="cityName">For Zipcode: "${$('#search-input').val()}"</h3>`;
-		domStrang +=						`<p>Date: ${new Date(weatherArray[i].dt_txt).toLocaleDateString()}</p>`;
-		domStrang +=						`<p>Temperature: ${weatherArray[i].main.temp}&deg F</p>`;
-		domStrang +=						`<p>Conditions: ${weatherArray[i].weather[0].description}</p>`;
-		domStrang +=						`<p>Air pressure: ${weatherArray[i].main.pressure} hpa</p>`;
-		domStrang +=						`<p>Wind speed: ${weatherArray[i].wind.speed} m/s</p>`;
+		domStrang +=						`<p class="date">Date: ${new Date(weatherArray[i].dt_txt).toLocaleDateString()}</p>`;
+		domStrang +=						`<p class="temperature">Temperature: ${weatherArray[i].main.temp}&deg F</p>`;
+		domStrang +=						`<p class="conditions">Conditions: ${weatherArray[i].weather[0].description}</p>`;
+		domStrang +=						`<p class="air-pressure">Air pressure: ${weatherArray[i].main.pressure} hpa</p>`;
+		domStrang +=						`<p class="wind-speed">Wind speed: ${weatherArray[i].wind.speed} m/s</p>`;
 		domStrang +=						`<p><a class="btn btn-success save-weather" role="button">Save Weather</a></p>`;
 		domStrang +=					`</div>`;
 		domStrang +=				`</div>`;
@@ -143,6 +143,7 @@ const weather = require("./weather");
 const dom = require("./dom");
 const firebaseApi = require("./firebaseApi");
 
+
 const usZipCodeRegex =/(^\d{5}$)|(^\d{5}-\d{4}$)/;
 
 const pressEnter = () => {
@@ -216,9 +217,30 @@ const googleAuth = () => {
 	});
 };
 
+const savedWeatherEvents = () => {
+	$("body").on("click", ".save-weather", (e) => {
+		let parent = e.target.closest('.weather');
+
+		let newSavedWeather = {
+			"dt_txt":$(parent).find('.date').html(),
+			"main": {
+				"temp":$(parent).find('.temperature').html(),
+				"pressure":$(parent).find('.air-pressure').html()
+			},
+			"weather": [{
+				"description":$(parent).find('.conditions').html()
+			}],
+			"wind": {
+				"speed":$(parent).find('.wind-speed').html()
+			}
+		};
+
+	});
+};
 
 
-module.exports = {pressEnter, pressSearch, daysChosen, myLinks, googleAuth};
+
+module.exports = {pressEnter, pressSearch, daysChosen, myLinks, googleAuth, savedWeatherEvents};
 
 
 
@@ -255,6 +277,7 @@ let apiKeys = require("./apiKeys");
 
 apiKeys.retrieveKeys();
 events.googleAuth();
+events.savedWeatherEvents();
 events.pressEnter();
 events.pressSearch();
 events.myLinks();
