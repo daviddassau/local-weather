@@ -31,6 +31,7 @@ const domString = (weatherArray, days) => {
 		domStrang +=						`<p>Conditions: ${weatherArray[i].weather[0].description}</p>`;
 		domStrang +=						`<p>Air pressure: ${weatherArray[i].main.pressure} hpa</p>`;
 		domStrang +=						`<p>Wind speed: ${weatherArray[i].wind.speed} m/s</p>`;
+		domStrang +=						`<p><a class="btn btn-success save-weather" role="button">Save Weather</a></p>`;
 		domStrang +=					`</div>`;
 		domStrang +=				`</div>`;
 		domStrang +=			`</div>`;
