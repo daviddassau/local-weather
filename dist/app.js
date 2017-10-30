@@ -2,6 +2,7 @@
 "use strict";
 
 const weather = require("./weather");
+const firebaseApi = require("./firebaseApi");
 
 const apiKeys = () => {
 	return new Promise((resolve, reject) => {
@@ -16,13 +17,15 @@ const apiKeys = () => {
 const retrieveKeys = () => {
 	apiKeys().then((results) => {
 		weather.setKeys(results.weather.apiKey);
+		firebaseApi.setKey(results.firebaseKeys);
+		firebase.initializeApp(results.firebaseKeys);
 	}).catch((error) => {
 			console.log("error", error);
 	});
 };
 
 module.exports = {retrieveKeys};
-},{"./weather":5}],2:[function(require,module,exports){
+},{"./firebaseApi":4,"./weather":6}],2:[function(require,module,exports){
 "use strict";
 
 let chosenLength = 1;
@@ -208,7 +211,17 @@ module.exports = {pressEnter, pressSearch, daysChosen, myLinks};
 
 
 
-},{"./dom":2,"./weather":5}],4:[function(require,module,exports){
+},{"./dom":2,"./weather":6}],4:[function(require,module,exports){
+"use strict";
+
+let firebaseKey = "";
+
+const setKey = (key) => {
+	firebaseKey = key;
+};
+
+module.exports = {setKey};
+},{}],5:[function(require,module,exports){
 "use strict";
 
 let events = require("./events");
@@ -219,7 +232,7 @@ apiKeys.retrieveKeys();
 events.pressEnter();
 events.pressSearch();
 events.myLinks();
-},{"./apiKeys":1,"./events":3}],5:[function(require,module,exports){
+},{"./apiKeys":1,"./events":3}],6:[function(require,module,exports){
 "use strict";
 
 let weatherKey;
@@ -285,4 +298,4 @@ const showResults = (weatherArray) => {
 };
 
 module.exports = {setKeys, searchWeather};
-},{"./dom":2}]},{},[4]);
+},{"./dom":2}]},{},[5]);
