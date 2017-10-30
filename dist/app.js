@@ -183,9 +183,30 @@ const searchZipcode = () => {
 	}
 };
 
+const myLinks = () => {
+	$(document).click(() => {
+		if(event.target.id === "authenticateTab"){
+			$("#authScreen").removeClass("hide");
+			$("#weatherScreen").addClass("hide");
+			$("#mySavedWeatherScreen").addClass("hide");
+		} else if(event.target.id === "weatherTab"){
+			$("#authScreen").addClass("hide");
+			$("#weatherScreen").removeClass("hide");
+			$("#mySavedWeatherScreen").addClass("hide");
+		} else if(event.target.id === "mySavedWeatherTab"){
+			$("#authScreen").addClass("hide");
+			$("#weatherScreen").addClass("hide");
+			$("#mySavedWeatherScreen").removeClass("hide");
+		}
+	});
+};
 
 
-module.exports = {pressEnter, pressSearch, daysChosen};
+
+module.exports = {pressEnter, pressSearch, daysChosen, myLinks};
+
+
+
 },{"./dom":2,"./weather":5}],4:[function(require,module,exports){
 "use strict";
 
@@ -196,6 +217,7 @@ apiKeys.retrieveKeys();
 // apiKeys.apiKeys();
 events.pressEnter();
 events.pressSearch();
+events.myLinks();
 },{"./apiKeys":1,"./events":3}],5:[function(require,module,exports){
 "use strict";
 

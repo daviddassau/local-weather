@@ -7,3 +7,4 @@ apiKeys.retrieveKeys();
 // apiKeys.apiKeys();
 events.pressEnter();
 events.pressSearch();
+events.myLinks();
