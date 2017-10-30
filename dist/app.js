@@ -141,6 +141,7 @@ module.exports = {setWeatherArray, clearDom, showChosenNumberOfDays, printError}
 
 const weather = require("./weather");
 const dom = require("./dom");
+const firebaseApi = require("./firebaseApi");
 
 const usZipCodeRegex =/(^\d{5}$)|(^\d{5}-\d{4}$)/;
 
@@ -205,22 +206,47 @@ const myLinks = () => {
 	});
 };
 
+const googleAuth = () => {
+	$("#googleButton").click((e) => {
+		firebaseApi.authenticateGoogle().then((result) => {
+			console.log("result", result);
+		}).catch((err) => {
+			console.log("error in authenticateGoogle", err);
+		});
+	});
+};
 
 
-module.exports = {pressEnter, pressSearch, daysChosen, myLinks};
+
+module.exports = {pressEnter, pressSearch, daysChosen, myLinks, googleAuth};
 
 
 
-},{"./dom":2,"./weather":6}],4:[function(require,module,exports){
+},{"./dom":2,"./firebaseApi":4,"./weather":6}],4:[function(require,module,exports){
 "use strict";
 
 let firebaseKey = "";
+let userUid = "";
 
 const setKey = (key) => {
 	firebaseKey = key;
 };
 
-module.exports = {setKey};
+//Firebase: GOOGLE - Use input credentials to authenticate user.
+let authenticateGoogle = () => {
+	return new Promise((resolve, reject) => {
+	  var provider = new firebase.auth.GoogleAuthProvider();
+	  firebase.auth().signInWithPopup(provider)
+	    .then((authData) => {
+	    	userUid = authData.user.uid;
+	        resolve(authData.user);
+	    }).catch((error) => {
+	        reject(error);
+	    });
+	});
+};
+
+module.exports = {setKey, authenticateGoogle};
 },{}],5:[function(require,module,exports){
 "use strict";
 
@@ -228,7 +254,7 @@ let events = require("./events");
 let apiKeys = require("./apiKeys");
 
 apiKeys.retrieveKeys();
-// apiKeys.apiKeys();
+events.googleAuth();
 events.pressEnter();
 events.pressSearch();
 events.myLinks();

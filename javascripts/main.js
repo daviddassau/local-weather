@@ -4,7 +4,7 @@ let events = require("./events");
 let apiKeys = require("./apiKeys");
 
 apiKeys.retrieveKeys();
-// apiKeys.apiKeys();
+events.googleAuth();
 events.pressEnter();
 events.pressSearch();
 events.myLinks();
