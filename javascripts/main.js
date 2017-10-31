@@ -4,7 +4,8 @@ let events = require("./events");
 let apiKeys = require("./apiKeys");
 
 apiKeys.retrieveKeys();
-// apiKeys.apiKeys();
+events.googleAuth();
+events.savedWeatherEvents();
 events.pressEnter();
 events.pressSearch();
 events.myLinks();

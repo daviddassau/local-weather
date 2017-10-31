@@ -2,6 +2,8 @@
 
 const weather = require("./weather");
 const dom = require("./dom");
+const firebaseApi = require("./firebaseApi");
+
 
 const usZipCodeRegex =/(^\d{5}$)|(^\d{5}-\d{4}$)/;
 
@@ -66,8 +68,39 @@ const myLinks = () => {
 	});
 };
 
+const googleAuth = () => {
+	$("#googleButton").click((e) => {
+		firebaseApi.authenticateGoogle().then((result) => {
+			console.log("result", result);
+		}).catch((err) => {
+			console.log("error in authenticateGoogle", err);
+		});
+	});
+};
+
+const savedWeatherEvents = () => {
+	$("body").on("click", ".save-weather", (e) => {
+		let parent = e.target.closest('.weather');
+
+		let newSavedWeather = {
+			"dt_txt":$(parent).find('.date').html(),
+			"main": {
+				"temp":$(parent).find('.temperature').html(),
+				"pressure":$(parent).find('.air-pressure').html()
+			},
+			"weather": [{
+				"description":$(parent).find('.conditions').html()
+			}],
+			"wind": {
+				"speed":$(parent).find('.wind-speed').html()
+			}
+		};
+
+	});
+};
 
 
-module.exports = {pressEnter, pressSearch, daysChosen, myLinks};
+
+module.exports = {pressEnter, pressSearch, daysChosen, myLinks, googleAuth, savedWeatherEvents};
 
 
