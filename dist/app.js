@@ -30,22 +30,23 @@ module.exports = {retrieveKeys};
 
 let chosenLength = 1;
 let weatherArray;
+let weatherData = require('./weather');
 
 
-const runDomString = () => {
+const runDomString = (forecastCity) => {
 	clearDom();
-	domString(weatherArray, chosenLength);
+	domString(weatherArray, forecastCity, chosenLength);
 };
 
-const domString = (weatherArray, days) => {
+const domString = (weatherArray, forecastCity, chosenLength) => {
 	let domStrang = "";
-	console.log(weatherArray);
+	console.log("weatherArray", weatherArray);
+	// console.log("forecastCity", forecastCity);
 
 		domStrang +=	`<div class="container-fluid">`;
 
 	for (let i=0; i<chosenLength; i++) {
-		console.log("weatherArray", weatherArray);
-		console.log("days", days);
+
 		if (i % 3 === 0) {
 			domStrang +=	`<div class="row">`;
 		}
@@ -53,7 +54,7 @@ const domString = (weatherArray, days) => {
 		domStrang +=			`<div class="col-sm-4 weather">`;
 		domStrang +=				`<div class="thumbnail text-center">`;
 		domStrang +=					`<div class="info">`;
-		domStrang +=		                `<h3 class="text-center" id="cityName">For Zipcode: "${$('#search-input').val()}"</h3>`;
+		domStrang +=		                `<h3 class="text-center" id="cityName">${forecastCity}</h3>`;
 		domStrang +=						`<p class="date">Date: ${new Date(weatherArray[i].dt_txt).toLocaleDateString()}</p>`;
 		domStrang +=						`<p class="temperature">Temperature: ${weatherArray[i].main.temp}&deg F</p>`;
 		domStrang +=						`<p class="conditions">Conditions: ${weatherArray[i].weather[0].description}</p>`;
@@ -102,14 +103,16 @@ const printToDom = (strang) => {
 };
 
 
-const setWeatherArray = (weather) => {
+const setWeatherArray = (weather, forecastCity) => {
 	 weatherArray = weather;
-	 runDomString();
+	 runDomString(forecastCity);
 };
 
 const showChosenNumberOfDays = (numberOfDays) => {
 	chosenLength = numberOfDays;
-	runDomString();
+	let savedCity = weatherData.getCity();
+	console.log("cityName", savedCity);
+	// runDomString(cityName);
 };
 
 
@@ -136,7 +139,7 @@ module.exports = {setWeatherArray, clearDom, showChosenNumberOfDays, printError}
 
 
 
-},{}],3:[function(require,module,exports){
+},{"./weather":6}],3:[function(require,module,exports){
 "use strict";
 
 const weather = require("./weather");
@@ -285,6 +288,7 @@ events.myLinks();
 "use strict";
 
 let weatherKey;
+let forecastCity = "";
 const dom = require("./dom");
 
 const searchWeatherAPI = (query) => {
@@ -331,6 +335,8 @@ const setKeys = (apiKey) => {
 const showResults = (weatherArray) => {
 
 	let fiveDayForecast = [];
+	forecastCity = weatherArray.city.name;
+	console.log("forecastCity", forecastCity);
 
 	for (let i = 0; i < weatherArray.list.length; i++) {
 		if (i === 0 || i ===  8 || i === 16 || i ===  32 || i === 39) {
@@ -339,12 +345,18 @@ const showResults = (weatherArray) => {
 	}
 	dom.clearDom();
 
-	// just get all 5 days in 3h format, store em in search-input, only show what the user asks for
-	// every 8th object is pushed to a new array to be used
-	// That way I can minimize the calls I make to the API
-
-	dom.setWeatherArray(fiveDayForecast);
+	console.log("forecastCity", forecastCity);
+	dom.setWeatherArray(fiveDayForecast, forecastCity);
 };
 
-module.exports = {setKeys, searchWeather};
+let getCity = () => {
+	return forecastCity;
+};
+
+module.exports = {setKeys, searchWeather, getCity};
+
+
+
+
+
 },{"./dom":2}]},{},[5]);

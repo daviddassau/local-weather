@@ -2,22 +2,23 @@
 
 let chosenLength = 1;
 let weatherArray;
+let weatherData = require('./weather');
 
 
-const runDomString = () => {
+const runDomString = (forecastCity) => {
 	clearDom();
-	domString(weatherArray, chosenLength);
+	domString(weatherArray, forecastCity, chosenLength);
 };
 
-const domString = (weatherArray, days) => {
+const domString = (weatherArray, forecastCity, chosenLength) => {
 	let domStrang = "";
-	console.log(weatherArray);
+	console.log("weatherArray", weatherArray);
+	// console.log("forecastCity", forecastCity);
 
 		domStrang +=	`<div class="container-fluid">`;
 
 	for (let i=0; i<chosenLength; i++) {
-		console.log("weatherArray", weatherArray);
-		console.log("days", days);
+
 		if (i % 3 === 0) {
 			domStrang +=	`<div class="row">`;
 		}
@@ -25,7 +26,7 @@ const domString = (weatherArray, days) => {
 		domStrang +=			`<div class="col-sm-4 weather">`;
 		domStrang +=				`<div class="thumbnail text-center">`;
 		domStrang +=					`<div class="info">`;
-		domStrang +=		                `<h3 class="text-center" id="cityName">For Zipcode: "${$('#search-input').val()}"</h3>`;
+		domStrang +=		                `<h3 class="text-center" id="cityName">${forecastCity}</h3>`;
 		domStrang +=						`<p class="date">Date: ${new Date(weatherArray[i].dt_txt).toLocaleDateString()}</p>`;
 		domStrang +=						`<p class="temperature">Temperature: ${weatherArray[i].main.temp}&deg F</p>`;
 		domStrang +=						`<p class="conditions">Conditions: ${weatherArray[i].weather[0].description}</p>`;
@@ -74,14 +75,16 @@ const printToDom = (strang) => {
 };
 
 
-const setWeatherArray = (weather) => {
+const setWeatherArray = (weather, forecastCity) => {
 	 weatherArray = weather;
-	 runDomString();
+	 runDomString(forecastCity);
 };
 
 const showChosenNumberOfDays = (numberOfDays) => {
 	chosenLength = numberOfDays;
-	runDomString();
+	let savedCity = weatherData.getCity();
+	console.log("cityName", savedCity);
+	// runDomString(cityName);
 };
 
 

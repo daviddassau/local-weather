@@ -1,6 +1,7 @@
 "use strict";
 
 let weatherKey;
+let forecastCity = "";
 const dom = require("./dom");
 
 const searchWeatherAPI = (query) => {
@@ -47,6 +48,8 @@ const setKeys = (apiKey) => {
 const showResults = (weatherArray) => {
 
 	let fiveDayForecast = [];
+	forecastCity = weatherArray.city.name;
+	console.log("forecastCity", forecastCity);
 
 	for (let i = 0; i < weatherArray.list.length; i++) {
 		if (i === 0 || i ===  8 || i === 16 || i ===  32 || i === 39) {
@@ -55,11 +58,16 @@ const showResults = (weatherArray) => {
 	}
 	dom.clearDom();
 
-	// just get all 5 days in 3h format, store em in search-input, only show what the user asks for
-	// every 8th object is pushed to a new array to be used
-	// That way I can minimize the calls I make to the API
-
-	dom.setWeatherArray(fiveDayForecast);
+	console.log("forecastCity", forecastCity);
+	dom.setWeatherArray(fiveDayForecast, forecastCity);
 };
 
-module.exports = {setKeys, searchWeather};
+let getCity = () => {
+	return forecastCity;
+};
+
+module.exports = {setKeys, searchWeather, getCity};
+
+
+
+
